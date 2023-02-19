@@ -59,6 +59,9 @@ function App() {
         <p>Portal To Heaven</p>
         <AudioRecorder onRecordingComplete={addAudioElement} />
       </header>
+        <video controls width="250">
+          <source src="../public/lipsync.mov" type="video/mov" />
+        </video>
     </div>
   );
 }

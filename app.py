@@ -21,6 +21,8 @@ from scipy.io.wavfile import write
 
 import time
 import pyttsx3
+import requests
+
 
 app = Flask(__name__, static_url_path='', static_folder='frontend/build')
 CORS(app) #comment this on deployment
@@ -31,6 +33,8 @@ openai.api_key = "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"
 os.environ["REPLICATE_API_TOKEN"] = "f626601bc523243afbabcb1c4fefbc0acb6eccb8"
 whisper_model = replicate.models.get("openai/whisper")
 whisper_version = whisper_model.versions.get("30414ee7c4fffc37e260fcab7842b5be470b9b840f2b608f5baa9bbef9a259ed")
+
+FLASK_LIPSYNC = "https://f9cc-34-83-130-51.ngrok.io/lipsync"
 
 
 @app.route("/", defaults={'path':''})
@@ -159,13 +163,25 @@ def call_GPT():
             frequency_penalty=0,
             presence_penalty=0
         )
-        print("GPT response was: " + response["choices"][0]["text"])
+        actual_response = response["choices"][0]["text"]
+        print("GPT response was: " + actual_response)
         
+        lipsync_return = requests.get(f"{FLASK_LIPSYNC}?text={actual_response}")
+        with open('frontend/public/lipsync.mov', 'wb') as f:
+            f.write(lipsync_return.content)
+    
+        # Print the response
+        # st.header("GPT-3 Response", anchor=None)
+        # st.text(response)
+        # video_file = open('lipsync.mov', 'rb')
+        # video_bytes = video_file.read()
+        # st.video(video_bytes) 
+
         #Basic TTS: 
         # engine = pyttsx3.init()
         # engine.say(response["choices"][0]["text"])
         # engine.runAndWait()
-        return response["choices"][0]["text"]
+        return actual_response
 
     return "ERROR IN GPT"
 
