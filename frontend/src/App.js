@@ -23,7 +23,6 @@ function App() {
     const audio = document.createElement('audio');
     audio.src = url;
     audio.controls = true;
-    document.body.appendChild(audio);
     console.log(url);
 
     let formData = new FormData() 
