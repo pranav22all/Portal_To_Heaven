@@ -1,12 +1,16 @@
 import logo from './logo.svg';
+import lipsync from './lipsync.mov'
 import './App.css';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios'
 import { AudioRecorder } from 'react-audio-voice-recorder';
+import { Alert } from '@mui/material';
+
 
 function App() {
   const [getMessage, setGetMessage] = useState({})
   const [audioText, setAudioText] = useState("");
+  const [alert, setAlert] = useState(false);
 
   useEffect(()=>{
     axios.get('http://localhost:5000/flask/hello').then(response => {
@@ -30,13 +34,15 @@ function App() {
 
 
     axios.post('http://localhost:5000/transfer_audio', formData).then((response) => {
-      console.log("Student Audio says " + response.data)
-      setAudioText(response.data)
-
-      let formDataTwo = new FormData() 
+      console.log("Student Audio says " + response.data);
+      setAudioText(response.data);
+      setAlert(true);
+      //alert("Neil Armstrong is thinking of a response!")
+      let formDataTwo = new FormData();
       formDataTwo.append("audioText", response.data)
       axios.post('http://localhost:5000/call_gpt', formDataTwo).then((responseTwo) => {
         console.log("GPT says " + responseTwo.data)
+        window.location.reload(false)
       })
 
     }).catch((error) => {
@@ -58,10 +64,17 @@ function App() {
       <header className="App-header">
         <p>Portal To Heaven</p>
         <AudioRecorder onRecordingComplete={addAudioElement} />
+        
+        <div className="alert-div">
+           
+        </div>
+        {alert ? <Alert severity='info'>Neil Armstrong is thinking of a response!</Alert> : <></> }  
+        
+        <video width="750" height="500" controls >
+          <source src={lipsync} type="video/mp4"/>
+        </video>      
       </header>
-        <video controls width="250">
-          <source src="../public/lipsync.mov" type="video/mov" />
-        </video>
+        
     </div>
   );
 }

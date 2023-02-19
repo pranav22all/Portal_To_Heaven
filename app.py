@@ -34,7 +34,7 @@ os.environ["REPLICATE_API_TOKEN"] = "f626601bc523243afbabcb1c4fefbc0acb6eccb8"
 whisper_model = replicate.models.get("openai/whisper")
 whisper_version = whisper_model.versions.get("30414ee7c4fffc37e260fcab7842b5be470b9b840f2b608f5baa9bbef9a259ed")
 
-FLASK_LIPSYNC = "https://f9cc-34-83-130-51.ngrok.io/lipsync"
+FLASK_LIPSYNC = "https://6b7e-34-83-130-51.ngrok.io/lipsync"
 
 
 @app.route("/", defaults={'path':''})
@@ -144,7 +144,7 @@ def call_GPT():
     if 'audioText' in request.form: 
         query = request.form.get('audioText', type=str)
         print("Query is: " + query)
-        prompt = build_JFK_prompt(query)
+        prompt = build_Armstrong_prompt(query)
         print("Prompt is: " + prompt)
 
         # Set the model and prompt
@@ -166,8 +166,8 @@ def call_GPT():
         actual_response = response["choices"][0]["text"]
         print("GPT response was: " + actual_response)
         
-        lipsync_return = requests.get(f"{FLASK_LIPSYNC}?text={actual_response}")
-        with open('frontend/public/lipsync.mov', 'wb') as f:
+        lipsync_return = requests.get(f"{FLASK_LIPSYNC}?text={actual_response}&person=neil")
+        with open('frontend/src/lipsync.mov', 'wb') as f:
             f.write(lipsync_return.content)
     
         # Print the response
