@@ -160,7 +160,13 @@ def call_GPT():
             presence_penalty=0
         )
         print("GPT response was: " + response["choices"][0]["text"])
+        
+        #Basic TTS: 
+        engine = pyttsx3.init()
+        engine.say(response["choices"][0]["text"])
+        engine.runAndWait()
         return response["choices"][0]["text"]
+
     return "ERROR IN GPT"
 
 
