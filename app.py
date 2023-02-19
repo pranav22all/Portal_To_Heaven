@@ -1,4 +1,4 @@
-from flask import Flask, send_from_directory
+from flask import Flask, send_from_directory, request 
 from flask_restful import Api, Resource, reqparse
 from flask_cors import CORS #comment this on deployment
 from api.HelloApiHandler import HelloApiHandler
@@ -6,6 +6,7 @@ from api.HelloApiHandler import HelloApiHandler
 import openai
 import streamlit as st
 from streamlit.logger import get_logger
+from mimetypes import guess_extension
 
 import os
 import numpy as np
@@ -46,6 +47,8 @@ def build_JFK_prompt(query):
     """
     person = "John F Kennedy"
     jfk_prompt=f"{PREPEND} {PROMPT} {person} \n {IN_CONTEXT} Q:{query} \n A:"
+    print("JFK PROMPT IS:")
+    print(jfk_prompt)
     return jfk_prompt
 
 def build_Armstrong_prompt(query): 
@@ -63,10 +66,17 @@ def build_Armstrong_prompt(query):
     armstrong_prompt=f"{PREPEND} {PROMPT} {person} \n {IN_CONTEXT} Q:{query} \n A:"
     return armstrong_prompt
 
-def speech_to_text(input_file_path): 
+
+@app.route("/transfer_audio", methods = ['POST'])
+def speech_to_text():
+    if 'audio_file' in request.files: 
+        file = request.files['audio_file']
+        file.save("input.webm")
+        print("saved file")
+    
     inputs = {
         # Audio file
-        'audio': open(input_file_path, "rb"),
+        'audio': open("input.webm", "rb"),
 
         # Choose a Whisper model.
         'model': "tiny",
@@ -122,28 +132,37 @@ def speech_to_text(input_file_path):
 
     whisper_output = whisper_version.predict(**inputs)
     student_question = whisper_output["transcription"]
+    print("Question asked was: " + student_question)
     return student_question 
 
+@app.route("/call_gpt", methods = ['POST'])
+def call_GPT(): 
+    if 'audioText' in request.form: 
+        query = request.form.get('audioText', type=str)
+        print("Query is: " + query)
+        prompt = build_JFK_prompt(query)
+        print("Prompt is: " + prompt)
 
-def call_GPT(prompt): 
-    # Set the model and prompt
-    model_engine = "text-davinci-003"
+        # Set the model and prompt
+        model_engine = "text-davinci-003"
 
-    # Set the maximum number of tokens to generate in the response
-    max_tokens = 100
+        # Set the maximum number of tokens to generate in the response
+        max_tokens = 100
 
-    # Generate a response
-    response = openai.Completion.create(
-        engine=model_engine,
-        prompt=prompt,
-        max_tokens=max_tokens,
-        temperature=0.5,
-        top_p=1,
-        frequency_penalty=0,
-        presence_penalty=0
-    )
-    return response
-    
+        # Generate a response
+        response = openai.Completion.create(
+            engine=model_engine,
+            prompt=prompt,
+            max_tokens=max_tokens,
+            temperature=0.5,
+            top_p=1,
+            frequency_penalty=0,
+            presence_penalty=0
+        )
+        print("GPT response was: " + response["choices"][0]["text"])
+        return response["choices"][0]["text"]
+    return "ERROR IN GPT"
+
 
 
 
