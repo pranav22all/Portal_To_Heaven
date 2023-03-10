@@ -29,11 +29,6 @@ CORS(app) #comment this on deployment
 api = Api(app)
 
 openai.api_key = "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"
-
-# os.environ["REPLICATE_API_TOKEN"] = "f626601bc523243afbabcb1c4fefbc0acb6eccb8"
-# whisper_model = replicate.models.get("openai/whisper")
-# whisper_version = whisper_model.versions.get("30414ee7c4fffc37e260fcab7842b5be470b9b840f2b608f5baa9bbef9a259ed")
-
 FLASK_LIPSYNC = "https://6b7e-34-83-130-51.ngrok.io/lipsync"
 
 
