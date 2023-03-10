@@ -29,8 +29,7 @@ CORS(app) #comment this on deployment
 api = Api(app)
 
 openai.api_key = "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"
-FLASK_LIPSYNC = "https://6b7e-34-83-130-51.ngrok.io/lipsync"
-
+FLASK_LIPSYNC = "https://76bd-104-198-108-205.ngrok.io/lipsync"
 
 @app.route("/", defaults={'path':''})
 def serve(path):
@@ -105,7 +104,12 @@ def call_GPT():
     if 'audioText' in request.form: 
         query = request.form.get('audioText', type=str)
         print("Query is: " + query)
-        prompt = build_Armstrong_prompt_GPT_3_5(query)
+        agent = request.form.get('agent', type=str)
+        print("Current agent is: " + agent)
+        if agent == 'jfk': 
+            prompt = build_JFK_prompt_GPT_3_5(query)
+        elif agent == 'neil': 
+            prompt = build_Armstrong_prompt_GPT_3_5(query)
         #print("Prompt is: " + prompt)
 
         response = openai.ChatCompletion.create(
@@ -114,10 +118,9 @@ def call_GPT():
             max_tokens = 100 
         )
         actual_response = response["choices"][0]["message"]["content"]
-
         print("GPT 3.5 response was: " + actual_response)
         
-        lipsync_return = requests.get(f"{FLASK_LIPSYNC}?text={actual_response}&person=neil")
+        lipsync_return = requests.get(f"{FLASK_LIPSYNC}?text={actual_response}&person={agent}")
         with open('frontend/src/lipsync.mov', 'wb') as f:
             f.write(lipsync_return.content)
         #Basic TTS: 

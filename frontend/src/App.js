@@ -1,16 +1,20 @@
-import logo from './logo.svg';
 import lipsync from './lipsync.mov'
+import jfk_img from './jfk.jpg'
+import armstrong_img from './armstrong.jpeg'
 import './App.css';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState} from 'react';
 import axios from 'axios'
 import { AudioRecorder } from 'react-audio-voice-recorder';
 import { Alert } from '@mui/material';
+import { Carousel } from 'react-responsive-carousel';
+import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 
 
 function App() {
   const [getMessage, setGetMessage] = useState({})
   const [audioText, setAudioText] = useState("");
   const [alert, setAlert] = useState(false);
+  const [agent, setAgent] = useState("jfk"); 
 
   useEffect(()=>{
     axios.get('http://localhost:5000/flask/hello').then(response => {
@@ -37,9 +41,10 @@ function App() {
       console.log("Student Audio says " + response.data);
       setAudioText(response.data);
       setAlert(true);
-      //alert("Neil Armstrong is thinking of a response!")
+      
       let formDataTwo = new FormData();
       formDataTwo.append("audioText", response.data)
+      formDataTwo.append("agent", agent)
       axios.post('http://localhost:5000/call_gpt', formDataTwo).then((responseTwo) => {
         console.log("GPT says " + responseTwo.data)
         window.location.reload(false)
@@ -59,16 +64,35 @@ function App() {
     
   };
 
+  const switchAgent = (index) => {
+    if (index === 0){
+      setAgent("jfk")
+    }
+    else{
+      setAgent("neil")
+    }
+  }
+
   return (
     <div className="App">
       <header className="App-header">
-        <p>Portal To Heaven</p>
+        <p>Lively: A Portal To Heaven</p>
+        <Carousel width="400px" onChange={switchAgent}>
+          <div>
+              <img src={jfk_img}/>
+              <p className="legend">John F. Kennedy</p>
+          </div>
+          <div>
+              <img src={armstrong_img}/>
+              <p className="legend">Neil Armstrong</p>
+          </div>
+        </Carousel>
         <AudioRecorder onRecordingComplete={addAudioElement} />
         
         <div className="alert-div">
            
         </div>
-        {alert ? <Alert severity='info'>Neil Armstrong is thinking of a response!</Alert> : <></> }  
+        {alert ? <Alert severity='info'>{agent} is thinking of a response!</Alert> : <></> }  
         
         <video width="750" height="500" controls >
           <source src={lipsync} type="video/mp4"/>
