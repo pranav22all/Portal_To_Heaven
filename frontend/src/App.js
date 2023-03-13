@@ -1,6 +1,9 @@
 import lipsync from './lipsync.mov'
 import jfk_img from './jfk.jpg'
 import armstrong_img from './armstrong.jpeg'
+import mandela_img from './mandela2.webp'
+import roosevelt_img from './roosevelt.jpeg'
+import feynman_img from "./feynman.jpeg"
 import './App.css';
 import React, { useEffect, useState} from 'react';
 import axios from 'axios'
@@ -14,7 +17,7 @@ function App() {
   const [getMessage, setGetMessage] = useState({})
   const [audioText, setAudioText] = useState("");
   const [alert, setAlert] = useState(false);
-  const [agent, setAgent] = useState("jfk"); 
+  const [agent, setAgent] = useState("John F. Kennedy"); 
 
   useEffect(()=>{
     axios.get('http://localhost:5000/flask/hello').then(response => {
@@ -66,18 +69,27 @@ function App() {
 
   const switchAgent = (index) => {
     if (index === 0){
-      setAgent("jfk")
+      setAgent("John F. Kennedy")
+    }
+    else if (index == 1){
+      setAgent("Neil Armstrong")
+    }
+    else if (index == 2){
+      setAgent("Nelson Mandela")
+    }
+    else if (index == 3){
+      setAgent("Eleanor Roosevelt")
     }
     else{
-      setAgent("neil")
+      setAgent("Richard Feynman")
     }
   }
 
   return (
     <div className="App">
       <header className="App-header">
-        <p>Lively: A Portal To Heaven</p>
-        <Carousel width="400px" onChange={switchAgent}>
+        <p>Lively: A Portal To Heaven / the Beyond</p>
+        <Carousel width="500px" onChange={switchAgent}>
           <div>
               <img src={jfk_img}/>
               <p className="legend">John F. Kennedy</p>
@@ -86,6 +98,19 @@ function App() {
               <img src={armstrong_img}/>
               <p className="legend">Neil Armstrong</p>
           </div>
+          <div>
+              <img src={mandela_img}/>
+              <p className="legend">Nelson Mandela</p>
+          </div>
+          <div>
+              <img src={roosevelt_img}/>
+              <p className="legend">Eleanor Roosevelt</p>
+          </div>
+          <div>
+              <img src={feynman_img}/>
+              <p className="legend">Richard Feynman</p>
+          </div>
+
         </Carousel>
         <AudioRecorder onRecordingComplete={addAudioElement} />
         

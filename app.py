@@ -86,6 +86,26 @@ def build_Armstrong_prompt_GPT_3_5(query):
     ]
     return armstrong_prompt
 
+
+def build_Mandela_prompt_GPT_3_5(query): 
+    mandela_prompt = [
+        {"role": "system", "content": "Make sure your response is conversational and natural. Limit responses to 80 words and address a middle schooler. Avoid profanity and make sure your output is appropriate for school. Respond to the following questions as Nelson Mandela."}
+    ]
+    return mandela_prompt
+
+def build_Roosevelt_prompt_GPT_3_5(query): 
+    roosevelt_prompt = [
+        {"role": "system", "content": "Make sure your response is conversational and natural. Limit responses to 80 words and address a middle schooler. Avoid profanity and make sure your output is appropriate for school. Respond to the following questions as Eleanor Roosevelt."}
+    ]
+    return roosevelt_prompt
+
+def build_Feynman_prompt_GPT_3_5(query): 
+    feynman_prompt = [
+                {"role": "system", "content": "Make sure your response is conversational and natural. Limit responses to 80 words and address a middle schooler. Avoid profanity and make sure your output is appropriate for school. Respond to the following questions as Richard Feynman."}
+
+    ]
+    return feynman_prompt
+
 @app.route("/transfer_audio", methods = ['POST'])
 def speech_to_text():
     if 'audio_file' in request.files: 
@@ -106,10 +126,22 @@ def call_GPT():
         print("Query is: " + query)
         agent = request.form.get('agent', type=str)
         print("Current agent is: " + agent)
-        if agent == 'jfk': 
+        if agent == 'John F. Kennedy': 
             prompt = build_JFK_prompt_GPT_3_5(query)
-        elif agent == 'neil': 
+            lipsync_suffix = "jfk"
+        elif agent == 'Neil Armstrong': 
             prompt = build_Armstrong_prompt_GPT_3_5(query)
+            lipsync_suffix = 'neil'
+        elif agent == 'Nelson Mandela': 
+            prompt = build_Mandela_prompt_GPT_3_5(query)
+            lipsync_suffix = 'mandela'
+        elif agent == 'Eleanor Roosevelt': 
+            prompt = build_Roosevelt_prompt_GPT_3_5(query)
+            lipsync_suffix = 'roosevelt'
+        else: 
+            prompt = build_Feynman_prompt_GPT_3_5(query)
+            lipsync_suffix = 'feynman'
+                
         #print("Prompt is: " + prompt)
 
         response = openai.ChatCompletion.create(
@@ -120,7 +152,7 @@ def call_GPT():
         actual_response = response["choices"][0]["message"]["content"]
         print("GPT 3.5 response was: " + actual_response)
         
-        lipsync_return = requests.get(f"{FLASK_LIPSYNC}?text={actual_response}&person={agent}")
+        lipsync_return = requests.get(f"{FLASK_LIPSYNC}?text={actual_response}&person={lipsync_suffix}")
         with open('frontend/src/lipsync.mov', 'wb') as f:
             f.write(lipsync_return.content)
         #Basic TTS: 
