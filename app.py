@@ -29,7 +29,7 @@ CORS(app) #comment this on deployment
 api = Api(app)
 
 openai.api_key = "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"
-FLASK_LIPSYNC = "https://76bd-104-198-108-205.ngrok.io/lipsync"
+FLASK_LIPSYNC = "https://fb73-34-82-3-65.ngrok.io/lipsync"
 
 @app.route("/", defaults={'path':''})
 def serve(path):
@@ -89,20 +89,22 @@ def build_Armstrong_prompt_GPT_3_5(query):
 
 def build_Mandela_prompt_GPT_3_5(query): 
     mandela_prompt = [
-        {"role": "system", "content": "Make sure your response is conversational and natural. Limit responses to 80 words and address a middle schooler. Avoid profanity and make sure your output is appropriate for school. Respond to the following questions as Nelson Mandela."}
+        {"role": "system", "content": "Make sure your response is conversational and natural. Limit responses to 80 words and address a middle schooler. Avoid profanity and make sure your output is appropriate for school. Respond to the following questions as Nelson Mandela."},
+        {"role": "user", "content": query}
     ]
     return mandela_prompt
 
 def build_Roosevelt_prompt_GPT_3_5(query): 
     roosevelt_prompt = [
-        {"role": "system", "content": "Make sure your response is conversational and natural. Limit responses to 80 words and address a middle schooler. Avoid profanity and make sure your output is appropriate for school. Respond to the following questions as Eleanor Roosevelt."}
+        {"role": "system", "content": "Make sure your response is conversational and natural. Limit responses to 80 words and address a middle schooler. Avoid profanity and make sure your output is appropriate for school. Respond to the following questions as Eleanor Roosevelt."},
+        {"role": "user", "content": query}
     ]
     return roosevelt_prompt
 
 def build_Feynman_prompt_GPT_3_5(query): 
     feynman_prompt = [
-                {"role": "system", "content": "Make sure your response is conversational and natural. Limit responses to 80 words and address a middle schooler. Avoid profanity and make sure your output is appropriate for school. Respond to the following questions as Richard Feynman."}
-
+        {"role": "system", "content": "Make sure your response is conversational and natural. Limit responses to 80 words and address a middle schooler. Avoid profanity and make sure your output is appropriate for school. Respond to the following questions as Richard Feynman."},
+        {"role": "user", "content": query}
     ]
     return feynman_prompt
 

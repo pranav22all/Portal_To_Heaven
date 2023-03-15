@@ -88,7 +88,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <p>Lively: A Portal To Heaven / the Beyond</p>
+        <p>Lively: A Portal To The Beyond</p>
         <Carousel width="500px" onChange={switchAgent}>
           <div>
               <img src={jfk_img}/>
