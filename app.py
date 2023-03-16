@@ -28,8 +28,8 @@ app = Flask(__name__, static_url_path='', static_folder='frontend/build')
 CORS(app) #comment this on deployment
 api = Api(app)
 
-openai.api_key = "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"
-FLASK_LIPSYNC = "https://fb73-34-82-3-65.ngrok.io/lipsync"
+openai.api_key = "" #Open AI API Key
+FLASK_LIPSYNC = "https://b78a-34-82-110-63.ngrok.io/lipsync"
 
 @app.route("/", defaults={'path':''})
 def serve(path):

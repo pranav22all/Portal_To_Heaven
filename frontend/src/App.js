@@ -18,6 +18,7 @@ function App() {
   const [audioText, setAudioText] = useState("");
   const [alert, setAlert] = useState(false);
   const [agent, setAgent] = useState("John F. Kennedy"); 
+  const [videoLink, setVideoLink] = useState("lipsync.mov")
 
   useEffect(()=>{
     axios.get('http://localhost:5000/flask/hello').then(response => {
@@ -55,16 +56,7 @@ function App() {
 
     }).catch((error) => {
       console.log(error); 
-    });
- 
-    // fetch('http://localhost:5000/flask/transfer_audio', {
-    //   method: "POST",
-    //   cache: "no-cache",
-    //   body: formData}).then( resp => {
-    //     console.log("Finished")
-    //     }
-    //   ); 
-    
+    }); 
   };
 
   const switchAgent = (index) => {
@@ -129,37 +121,3 @@ function App() {
 }
 
 export default App;
-
-
-// import logo from './logo.svg';
-// import './App.css';
-// import React, { useEffect, useState } from 'react';
-// import axios from 'axios'
-
-// function App() {
-//   const [getMessage, setGetMessage] = useState({})
-
-//   useEffect(()=>{
-//     axios.get('http://localhost:5000/flask/hello').then(response => {
-//       console.log("SUCCESS", response)
-//       setGetMessage(response)
-//     }).catch(error => {
-//       console.log(error)
-//     })
-
-//   }, [])
-//   return (
-//     <div className="App">
-//       <header className="App-header">
-//         <img src={logo} className="App-logo" alt="logo" />
-//         <p>React + Flask Tutorial</p>
-//         <div>{getMessage.status === 200 ? 
-//           <h3>{getMessage.data.message}</h3>
-//           :
-//           <h3>LOADING</h3>}</div>
-//       </header>
-//     </div>
-//   );
-// }
-
-// export default App;
